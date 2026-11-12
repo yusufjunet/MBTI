@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>TES KEPRIBADIAN MBTI</title>
+<style>
+:root{--bg:#f4f6fb;--card:#fff;--fg:#1c2433;--mut:#5d6880;--acc:#1f4e9c;--acc2:#e8eefb;--bd:#d5dcea;--bad:#c0392b;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#10151f;--card:#1a2130;--fg:#e8ecf5;--mut:#9aa6bd;--acc:#7aa7ff;--acc2:#23304a;--bd:#2f3b54;--bad:#ff7b6b;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#10151f;--card:#1a2130;--fg:#e8ecf5;--mut:#9aa6bd;--acc:#7aa7ff;--acc2:#23304a;--bd:#2f3b54;--bad:#ff7b6b;color-scheme:dark}
+html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + 70px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+.wrap{max-width:720px;margin:0 auto;padding:16px}
+h1{font-size:1.5rem;text-align:center;margin:8px 0 4px;letter-spacing:.5px}
+.sub{text-align:center;color:var(--mut);margin:0 0 16px;font-size:.92rem}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:16px;margin-bottom:14px}
+label.f{display:block;font-weight:600;margin:12px 0 4px;font-size:.92rem}
+input,select,textarea{width:100%;padding:10px 12px;border:1px solid var(--bd);border-radius:10px;background:var(--bg);color:var(--fg);font:inherit}
+textarea{min-height:70px;resize:vertical}
+.btn{display:block;width:100%;padding:13px;border:0;border-radius:12px;background:var(--acc);color:#fff;font:inherit;font-weight:700;cursor:pointer;margin-top:14px}
+:root[data-theme="dark"] .btn{color:#10151f}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .btn{color:#10151f}}
+html:root .btn.alt{background:var(--card);color:var(--acc);border:2px solid var(--acc)}
+.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);padding:8px 0}
+.pg{height:8px;background:var(--acc2);border-radius:8px;overflow:hidden}
+.pg i{display:block;height:100%;width:0;background:var(--acc);transition:width .2s}
+.pt{font-size:.85rem;color:var(--mut);text-align:right;margin-top:3px}
+.q{padding:14px;border:1px solid var(--bd);border-radius:14px;background:var(--card);margin-bottom:12px}
+.q.miss{border-color:var(--bad);box-shadow:0 0 0 2px var(--bad)}
+.q p{margin:0 0 8px;font-weight:600}
+.o{display:flex;gap:10px;align-items:flex-start;padding:10px;border:1px solid var(--bd);border-radius:10px;margin-top:6px;cursor:pointer}
+.o input{width:auto;margin-top:4px}
+.o.on{background:var(--acc2);border-color:var(--acc)}
+.o b{color:var(--acc)}
+.tp{font-size:3rem;font-weight:800;text-align:center;letter-spacing:6px;color:var(--acc);margin:4px 0}
+.dm{margin:12px 0}.dm .l{display:flex;justify-content:space-between;font-size:.88rem}
+.dm .b{display:flex;height:12px;border-radius:8px;overflow:hidden;margin-top:4px}
+.dm .b i{display:block;height:100%}
+h2{font-size:1.05rem;margin:16px 0 6px;color:var(--acc)}
+ol,ul{padding-left:22px;margin:6px 0}li{margin:4px 0}
+.err{color:var(--bad);font-size:.9rem;margin-top:8px;min-height:1.2em}
+.hide{display:none}
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>TES KEPRIBADIAN MBTI</h1>
+<p class="sub">Myers-Briggs Type Indicator</p>
+
+<section id="s1" class="card">
+<h2 style="margin-top:0">Identitas</h2>
+<label class="f">Nama</label><input id="nama" autocomplete="off">
+<label class="f">Jenis kelamin</label><select id="jk"><option value="">Pilih</option><option>Laki-laki</option><option>Perempuan</option></select>
+<label class="f">Umur (tahun)</label><input id="umur" type="number" min="5" max="100" inputmode="numeric">
+<label class="f">Pendidikan</label><select id="pend"><option value="">Pilih</option><option>SD</option><option>SMP</option><option>SMA/SMK</option><option>Diploma (D1-D3)</option><option>Sarjana (S1/D4)</option><option>Magister (S2)</option><option>Doktor (S3)</option></select>
+<label class="f">Pekerjaan</label><input id="kerja" autocomplete="off">
+<label class="f">Alamat</label><textarea id="alamat"></textarea>
+<label class="f">Tanggal tes</label><input id="tgl" type="date">
+<div class="err" id="e1"></div>
+<button class="btn" id="mulai">Mulai Tes</button>
+</section>
+
+<section id="s2" class="hide">
+<div class="card"><b>Petunjuk:</b> Setiap nomor punya dua pilihan, A dan B. Pilih satu yang paling sesuai dengan diri Anda yang sebenarnya, bukan yang Anda inginkan. Tidak ada jawaban benar atau salah. Semua nomor harus dijawab.</div>
+<div class="bar"><div class="pg"><i id="pgi"></i></div><div class="pt" id="pgt">0 dari 70 terjawab</div></div>
+<div id="qs"></div>
+<div class="err" id="e2"></div>
+<button class="btn" id="selesai">Lihat Hasil</button>
+</section>
+
+<section id="s3" class="hide">
+<div class="card" id="res"></div>
+<button class="btn" id="unduh">Unduh Hasil (PDF, 1 halaman)</button>
+<div class="err" id="e3"></div>
+<button class="btn alt" id="ulang">Ulangi Tes</button>
+</section>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
+// Format: pernyataan | pilihan A | pilihan B
+const Q=[
+"Di sebuah pesta, Anda biasanya:|mengobrol dengan banyak orang, termasuk orang yang baru dikenal|mengobrol hanya dengan beberapa orang yang sudah dikenal",
+"Anda merasa diri Anda lebih:|realistis, yaitu melihat keadaan apa adanya|suka menduga-duga dan membayangkan kemungkinan",
+"Mana yang menurut Anda lebih buruk:|terlalu sibuk berandai-andai|sudah terlanjur memulai lalu kerepotan di tengah jalan",
+"Anda biasanya lebih terkesan pada:|prinsip atau aturan yang benar|perasaan orang",
+"Anda lebih mudah diyakinkan oleh:|alasan yang masuk akal (logis)|ajakan yang menyentuh perasaan",
+"Anda lebih suka bekerja:|dengan batas waktu yang jelas|kapan saja, tanpa batas waktu",
+"Dalam mengambil keputusan, Anda cenderung:|berhati-hati dan dipikirkan dulu|spontan, langsung memutuskan",
+"Di sebuah pesta, Anda:|bertahan sampai pesta selesai dan makin bersemangat|pulang lebih awal karena merasa lelah",
+"Anda lebih merasa sebagai orang yang:|berpikir dengan akal sehat dan logika sehari-hari|suka berimajinasi",
+"Anda lebih tertarik pada:|hal yang nyata dan sedang terjadi|hal yang mungkin terjadi nanti",
+"Saat menilai orang lain, Anda lebih dipengaruhi oleh:|aturan atau hukum, bukan keadaan orang itu|keadaan orang itu, bukan aturan",
+"Saat pertama kali mendekati orang lain, Anda lebih:|menjaga jarak dan tidak melibatkan perasaan|melibatkan diri secara pribadi dan berusaha membuat orang itu tertarik",
+"Anda biasanya lebih:|tepat waktu|santai soal waktu",
+"Mana yang lebih membuat Anda terganggu:|memiliki banyak urusan yang belum selesai|memiliki banyak urusan yang sudah selesai",
+"Dalam kelompok pergaulan Anda, Anda:|tahu kabar dan kejadian yang dialami orang lain|biasanya ketinggalan kabar",
+"Saat mengerjakan hal yang biasa dilakukan, Anda lebih suka:|memakai cara yang umum dipakai orang|memakai cara Anda sendiri",
+"Anda lebih suka penulis yang:|menulis dengan kata-kata berarti apa adanya|memakai kiasan atau perumpamaan",
+"Mana yang lebih penting bagi Anda:|teguh dan konsisten dengan pemikiran sendiri|menjaga hubungan baik dengan orang lain",
+"Anda lebih nyaman membuat keputusan berdasarkan:|logika|nilai-nilai yang Anda yakini",
+"Anda biasanya lebih:|suka bila semua urusan sudah selesai tuntas|suka membiarkan pilihan tetap terbuka",
+"Menurut Anda, Anda orang yang:|tegas dan teguh pada pendirian|santai dan mudah menyesuaikan pendirian",
+"Saat menelepon, Anda biasanya:|langsung bicara|menyusun kata-kata dulu sebelum bicara",
+"Bagi Anda, fakta itu:|menggambarkan apa yang sebenarnya terjadi|biasanya masih perlu ditafsirkan",
+"Anda lebih suka bekerja dengan:|informasi praktis|gagasan abstrak (yang tidak berwujud nyata)",
+"Anda cenderung lebih:|berpikir jernih dan tenang|berperasaan hangat",
+"Anda lebih suka menjadi orang yang:|adil, meski kurang memaafkan|pemaaf, meski kurang adil",
+"Menurut Anda, pengalaman hidup sebaiknya:|direncanakan dan dipilih dengan sengaja|dibiarkan berjalan dengan sendirinya",
+"Anda lebih nyaman:|langsung membeli atau memesan sesuatu|punya beberapa pilihan dulu",
+"Dalam sebuah pertemuan, Anda:|biasanya memulai pembicaraan|menunggu sampai diajak bicara",
+"Cara berpikir lazim yang sudah lama dipakai orang (akal sehat tradisional):|biasanya bisa dipercaya|sering menimbulkan salah paham",
+"Menurut Anda, anak-anak pada umumnya kurang:|melakukan kegiatan yang bermanfaat|berkhayal atau berfantasi",
+"Anda biasanya lebih:|mempertahankan prinsip|bersikap simpatik (ikut merasakan)",
+"Anda biasanya lebih bersikap:|tegas daripada lembut|lembut daripada tegas",
+"Anda cenderung menjaga agar segala hal:|tertata dengan baik|tetap terbuka untuk berbagai kemungkinan",
+"Anda lebih menghargai:|sesuatu yang pasti|sesuatu yang bisa berubah-ubah",
+"Bertemu dan berinteraksi dengan orang baru bagi Anda:|menambah semangat|menguras tenaga",
+"Anda lebih sering menggambarkan diri sebagai:|orang yang praktis|orang yang suka teori",
+"Anda lebih menilai orang lain dari:|seberapa besar manfaatnya|bagaimana kesan penampilannya",
+"Mana yang lebih memuaskan Anda:|membahas suatu topik sampai tuntas|mencapai kesepakatan tentang suatu masalah",
+"Mana yang lebih sering Anda gunakan:|pikiran|perasaan",
+"Anda lebih nyaman dengan pekerjaan yang:|ada kontrak atau ikatan yang jelas|tidak terikat",
+"Anda lebih suka bila segala hal:|rapi dan teratur|menyesuaikan keadaan",
+"Anda lebih memilih:|punya banyak teman, meski hubungannya singkat|punya beberapa teman, dengan hubungan yang lama dan langgeng",
+"Anda lebih berpegang pada:|fakta|prinsip atau teori umum",
+"Anda lebih tertarik pada:|membuat dan menyalurkan hasil kerja (hasil akhir)|merencanakan dan meneliti",
+"Mana yang lebih pantas dipuji:|orang yang sangat logis|orang yang sangat mengutamakan perasaan",
+"Anda merasa berharga karena:|berpendirian teguh|penuh pengabdian",
+"Anda lebih suka pernyataan yang:|sudah final dan tidak bisa diubah|masih bersifat sementara dan bisa diubah",
+"Anda lebih nyaman berada pada saat:|sesudah keputusan diambil|sebelum keputusan diambil",
+"Terhadap orang yang baru dikenal, Anda:|mudah berbicara panjang lebar|sulit untuk berbicara",
+"Anda lebih percaya pada:|pengalaman nyata|firasat atau dugaan",
+"Anda merasa diri Anda:|lebih praktis daripada kreatif|lebih kreatif daripada praktis",
+"Ciri khas Anda adalah:|pikiran yang jernih|perasaan yang kuat",
+"Anda cenderung lebih:|adil tanpa memihak|peduli dan ikut merasakan",
+"Anda sangat menyukai tindakan yang:|memastikan segala sesuatu diatur lebih dulu|membiarkan segala hal terjadi begitu saja",
+"Cara kerja Anda lebih sering:|mengatur segala sesuatu|menunda-nunda penyelesaian",
+"Saat telepon berbunyi, Anda:|segera mengangkatnya|berharap orang lain yang mengangkatnya",
+"Anda lebih bangga pada kemampuan:|memahami kenyataan|berimajinasi",
+"Anda lebih tertarik pada:|asas atau prinsip dasar|penyesuaian terhadap keadaan",
+"Dalam menilai, Anda biasanya bersikap:|netral|murah hati",
+"Anda menganggap diri Anda orang yang:|berhati keras dan teguh|berhati lembut dan halus",
+"Anda lebih sering mengalami:|kejadian yang sudah terjadwal|kejadian yang datang tiba-tiba",
+"Anda lebih menyukai:|hal-hal yang rutin|hal-hal yang tidak biasa",
+"Anda cenderung:|mudah didekati|agak menjaga jarak",
+"Saat menulis, Anda lebih suka:|memakai kata dengan arti sebenarnya|memakai kata kiasan",
+"Anda lebih senang:|mengalami sendiri secara nyata|membayangkan",
+"Anda biasanya lebih:|berpikir jernih|menunjukkan perasaan yang kuat",
+"Anda lebih:|adil daripada toleran|toleran daripada adil",
+"Anda lebih memilih kegiatan yang:|sudah direncanakan|tidak direncanakan",
+"Anda cenderung lebih:|berhati-hati daripada spontan|spontan daripada berhati-hati"
+].map(s=>s.split("|"));
+
+// Isi tiap tipe: d = deskripsi, s = saran dan pengembangan
+const T={
+ISTJ:{d:["Serius, tenang, stabil, dan suka suasana damai.","Suka hal yang berdasarkan fakta; berpikir logis, objektif, praktis, dan realistis.","Mengutamakan tugas, tekun, teratur, menepati janji, dapat diandalkan, dan bertanggung jawab.","Pendengar yang baik dan setia, tetapi hanya mau terbuka kepada orang yang dekat.","Berpegang teguh pada aturan, standar, dan prosedur."],s:["Belajarlah memahami perasaan dan kebutuhan orang lain.","Kurangi keinginan mengatur atau memerintah orang lain demi menegakkan aturan.","Biasakan melihat sisi baik dari orang lain dan dari berbagai hal.","Bukalah diri terhadap perubahan."]},
+ISFJ:{d:["Penuh pertimbangan, hati-hati, teliti, dan akurat.","Serius, tenang, dan stabil, tetapi mudah tersentuh perasaannya.","Ramah, peduli pada perasaan dan kebutuhan orang lain, setia, mau bekerja sama, dan pendengar yang baik.","Pandai mengatur, memperhatikan hal kecil, teliti, sangat bertanggung jawab, dan dapat diandalkan."],s:["Gali lebih dalam, dan tunjukkan lebih banyak antusias dan semangat.","Belajarlah berkata tidak. Jangan berusaha menyenangkan semua orang, karena Anda bisa dianggap tidak punya pendirian.","Jangan terpaku pada zona nyaman dan rutinitas.","Cobalah hal baru. Banyak hal menyenangkan yang mungkin belum pernah Anda coba."]},
+ISTP:{d:["Tenang, pendiam, cenderung kaku dan dingin, hati-hati, serta penuh pertimbangan.","Logis, rasional, kritis, objektif, dan mampu menyingkirkan perasaan saat memutuskan.","Mampu menghadapi perubahan mendadak dengan cepat dan tenang.","Percaya diri, tegas, dan mampu menghadapi perbedaan pendapat maupun kritik.","Mampu menganalisis, mengatur, dan membagi tugas kepada orang lain.","Pandai memecahkan masalah, terutama masalah teknis dan keadaan mendadak."],s:["Amatilah kehidupan sosial: apa yang membuat orang marah, sayang, senang, dan bersemangat, lalu terapkan dalam hubungan Anda.","Belajarlah mengenali perasaan sendiri dan mengungkapkannya.","Jadilah lebih terbuka: keluar dari zona nyaman, cari ide baru, dan sering berdiskusi dengan orang lain.","Jangan mencari-cari kesalahan orang hanya untuk menyelesaikan masalah.","Jangan menyimpan informasi yang seharusnya dibagikan, dan belajarlah mempercayakan tugas kepada orang lain."]},
+ISFP:{d:["Berpikir sederhana dan praktis, luwes, peka, ramah, tidak suka menonjolkan diri, dan rendah hati terhadap kemampuannya.","Menghindari pertengkaran dan tidak memaksakan pendapat atau nilai-nilainya kepada orang lain.","Biasanya tidak mau memimpin, lebih suka menjadi pengikut dan pelaksana yang setia.","Sering santai dalam menyelesaikan sesuatu karena sangat menikmati saat ini.","Menunjukkan kepedulian lebih lewat tindakan daripada kata-kata."],s:["Jangan takut ditolak atau berselisih. Anda tidak perlu menyenangkan semua orang.","Mulailah memikirkan dampak jangka panjang dari keputusan-keputusan kecil hari ini.","Asah dan kembangkan sisi kreatif dan seni Anda; itu modal yang bagus.","Cobalah lebih terbuka dan ungkapkan perasaan Anda."]},
+INFJ:{d:["Penuh perhatian, mampu merasakan perasaan orang lain, peka, dan berkomitmen dalam hubungan.","Berhasil karena tekun, orisinal, dan punya tekad kuat untuk melakukan apa pun yang diperlukan demi hasil kerja terbaik.","Idealis, perfeksionis (ingin segalanya sempurna), dan memegang teguh prinsip.","Berwawasan ke depan, penuh ide, kreatif, suka merenung, dan menginspirasi.","Biasanya diikuti dan dihormati karena tujuannya jelas dan mengabdi pada hal-hal baik."],s:["Seimbangkan cara pandang Anda. Jangan hanya melihat sisi buruk dan risiko, lihat juga sisi baik dan peluangnya.","Bersabarlah. Jangan mudah marah atau menyalahkan orang lain maupun keadaan.","Beristirahatlah. Jangan terus-menerus berpikir atau mengurus tanggung jawab."]},
+INTJ:{d:["Berwawasan ke depan, punya rencana yang bisa dijalankan, biasanya punya ide orisinal dan dorongan kuat untuk mewujudkannya.","Mandiri dan percaya diri.","Pandai menganalisis, dan mampu mengubah hal yang rumit dan abstrak menjadi sederhana, mudah dipahami, dan mudah dilakukan.","Ragu terhadap hal baru, kritis, logis, tegas dalam memutuskan, dan kadang keras kepala.","Ingin terus berkembang dan selalu ingin lebih maju dari orang lain.","Kritik dan perselisihan bukan masalah besar baginya."],s:["Belajarlah mengungkapkan emosi dan perasaan Anda.","Bukalah diri pada dunia luar: bergaul lebih banyak, banyak belajar dan membaca, mengunjungi banyak tempat, mencoba hal baru, dan memperluas wawasan.","Hindari perdebatan yang tidak penting.","Belajarlah memahami perasaan orang lain, memberi perhatian, dan lebih peka terhadap mereka."]},
+INFP:{d:["Sangat peduli dan peka terhadap perasaan orang lain.","Penuh semangat dan setia, tetapi biasanya hanya kepada orang yang dekat.","Peduli pada banyak hal, tetapi cenderung mengambil terlalu banyak tugas dan hanya menyelesaikan sebagian.","Cenderung idealis dan perfeksionis.","Berpikir mencari solusi yang menguntungkan semua pihak, mempercayai orang lain, dan membantu mereka berkembang sebaik-baiknya."],s:["Belajarlah menghadapi kritik. Jika kritik itu baik, jadikan bahan untuk memperbaiki diri; jika tidak, abaikan saja. Jangan ragu bertanya dan meminta saran.","Belajarlah bersikap tegas. Jangan selalu memakai perasaan dan menyenangkan orang dengan tindakan baik. Bertindak baik tidak sama dengan bertindak benar.","Jangan terlalu menyalahkan dan bersikap keras pada diri sendiri. Gagal itu hal biasa dan dialami semua orang.","Jangan terlalu baik kepada orang lain sampai melupakan diri sendiri. Anda juga bertanggung jawab berbuat baik kepada diri sendiri."]},
+INTP:{d:["Sangat menghargai kecerdasan dan pengetahuan, suka hal yang bersifat teori dan ilmiah, serta senang memecahkan masalah dengan logika dan analisis.","Pendiam dan menahan diri. Lebih suka bekerja sendiri.","Cenderung kritis, ragu terhadap hal baru, mudah curiga, dan pesimis.","Tidak suka memimpin, dan bisa menjadi pengikut yang tidak banyak menuntut.","Cenderung punya minat yang jelas. Membutuhkan karier yang memungkinkan minatnya berkembang dan bermanfaat.","Jika menemukan hal yang menarik minatnya, ia akan menekuninya dengan sangat serius dan bersemangat."],s:["Belajarlah membangun hubungan dengan orang lain.","Belajarlah berempati, mendengarkan dengan sungguh-sungguh, memberi perhatian, dan bertukar pendapat.","Santai. Jangan terlalu banyak berpikir. Nikmati hidup tanpa harus selalu bertanya mengapa dan bagaimana.","Cobalah memilih satu ide, lalu rencanakan dan wujudkan.","Jangan terlalu sering berganti ide sampai tidak ada satu pun yang terwujud."]},
+ESTP:{d:["Spontan, aktif, penuh tenaga, cekatan, cepat, antusias, menyenangkan, dan suka variasi.","Pandai berkomunikasi, tegas, bicara langsung ke pokok, apa adanya, berwibawa, dan pandai bergaul.","Pandai memecahkan masalah langsung di tempat. Mampu menghadapi masalah, perselisihan, dan kritik; tidak mudah khawatir dan menikmati apa pun yang terjadi.","Cenderung menyukai hal yang berhubungan dengan mesin, kegiatan bersama, dan olahraga.","Mudah menyesuaikan diri, toleran, dan umumnya berpegang pada nilai-nilai yang lazim.","Tidak suka penjelasan yang terlalu panjang. Paling baik dalam hal nyata yang bisa langsung dikerjakan."],s:["Belajarlah memahami perasaan dan pikiran orang lain, terutama saat berbicara dengan mereka.","Belajarlah bersabar dan menikmati proses. Tidak semua hal bisa dicapai dengan cepat.","Sesekali luangkan waktu untuk merenung dan merencanakan masa depan Anda.","Cobalah mencatat hasil pengamatan Anda, lengkap dengan detailnya."]},
+ESFP:{d:["Mudah bergaul, santai, mudah berteman, bersahabat, sangat sosial, ramah, hangat, dan menyenangkan.","Optimis, ceria, bersemangat, menghibur, dan suka menjadi pusat perhatian.","Pandai bergaul dengan orang, murah hati, mudah bersimpati, dan mudah mengenali perasaan orang lain.","Menghindari pertengkaran dan menjaga hubungan tetap rukun.","Tahu apa yang terjadi di sekitarnya dan ikut ambil bagian dalam kegiatan itu.","Sangat baik dalam keadaan yang membutuhkan akal sehat, tindakan cepat, dan keterampilan praktis."],s:["Jangan terburu-buru mengambil keputusan. Belajarlah fokus dan tidak mudah berubah pikiran, terutama untuk hal penting.","Jangan berusaha menyenangkan semua orang. Begitu juga, tidak semua orang bisa menyenangkan Anda.","Belajarlah menghadapi kritik dan perselisihan. Jangan menghindar.","Anda cenderung mementingkan materi. Hati-hati, tidak semua hal bisa diukur dengan benda atau uang."]},
+ENFP:{d:["Ramah, hangat, penuh tenaga, optimis, antusias, bersemangat tinggi, dan menyenangkan.","Penuh imajinasi dan ide, kreatif, dan suka membuat hal baru.","Mampu menyesuaikan diri dengan berbagai keadaan dan perubahan.","Pandai berkomunikasi, senang bergaul, dan membawa suasana positif.","Mudah membaca perasaan dan kebutuhan orang lain."],s:["Belajarlah fokus, disiplin, tegas, dan konsisten.","Belajarlah menghadapi perselisihan dan kritik.","Pikirkan kebutuhan diri sendiri. Jangan melupakannya karena terlalu peduli pada kebutuhan orang lain.","Jangan terlalu boros. Belajarlah mengatur keuangan sedikit demi sedikit."]},
+ENTP:{d:["Gesit, kreatif, penuh gagasan baru, cerdik, logis, dan baik dalam banyak hal.","Banyak bicara dan pandai berdebat. Bisa berdebat sekadar untuk bersenang-senang tanpa merasa bersalah.","Luwes. Punya banyak cara untuk mengatasi masalah dan tantangan.","Kurang konsisten. Cenderung beralih ke hal baru yang menarik sebelum menyelesaikan hal sebelumnya.","Punya keinginan kuat untuk mengembangkan diri."],s:["Carilah solusi yang menguntungkan semua pihak. Jangan ingin menang sendiri.","Belajarlah disiplin dan konsisten.","Hindari perdebatan yang tidak penting.","Belajarlah lebih waspada. Seimbangkan cara pandang agar tidak terlalu optimis dan tidak mengambil risiko yang tidak masuk akal.","Belajarlah memperhatikan perasaan orang lain."]},
+ESTJ:{d:["Praktis, realistis, berpegang pada fakta, dan punya dorongan alami untuk berbisnis dan menangani hal teknis (mesin).","Sangat sistematis, mengikuti prosedur, dan terencana.","Disiplin dan pekerja keras.","Cenderung berpegang pada cara lama dan kaku.","Tidak tertarik pada hal yang menurutnya tidak berguna, tetapi bisa menyesuaikan diri bila perlu.","Senang mengatur sesuatu. Bisa menjadi pengelola (administrator) yang baik jika ingat memperhatikan perasaan dan sudut pandang orang lain."],s:["Kurangi keinginan mengendalikan dan memaksa orang lain.","Belajarlah mengendalikan emosi dan amarah Anda.","Cobalah berintrospeksi dan sesekali luangkan waktu untuk merenung.","Belajarlah lebih sabar dan rendah hati.","Belajarlah memahami orang lain."]},
+ESFJ:{d:["Hangat, banyak bicara, disukai banyak orang, senang bekerja sama, suka membantu, dan anggota kelompok yang aktif.","Membutuhkan keseimbangan dan pandai menciptakan keharmonisan.","Selalu berbuat baik kepada orang lain. Bekerja dengan baik dalam suasana yang mendukung dan menghargainya.","Santai, sederhana, dan kurang memikirkan sesuatu secara panjang.","Teliti dan rajin merawat barang yang dimilikinya."],s:["Jangan mengorbankan diri hanya demi menyenangkan orang lain.","Jangan menilai harga diri Anda dari perlakuan, penghargaan, atau pujian orang lain.","Mintalah pendapat orang lain saat mengambil keputusan, dan belajarlah lebih tegas.","Terimalah tanggung jawab hidup dan belajarlah lebih dewasa. Jangan mengasihani diri sendiri.","Hadapi kritik dan perselisihan, jangan menghindar."]},
+ENFJ:{d:["Kreatif, imajinatif, peka perasaan, dan setia.","Umumnya peduli pada pendapat dan keinginan orang lain, dan cenderung bertindak dengan memperhatikan perasaan mereka.","Pandai bergaul, meyakinkan, ramah, menyenangkan, disukai banyak orang, dan bersimpati. Mudah terpengaruh oleh kritik dan pujian.","Menyukai variasi dan tantangan baru.","Membutuhkan penghargaan dan penerimaan dari orang lain."],s:["Jangan mengorbankan diri hanya demi menyenangkan orang lain.","Jangan menilai harga diri Anda dari perlakuan orang lain. Jangan mudah kecewa jika mereka tidak seperti yang Anda harapkan.","Belajarlah tegas dan berani mengambil keputusan, serta menghadapi kritik dan perselisihan.","Jangan terlalu keras pada diri sendiri."]},
+ENTJ:{d:["Tegas, berani menyatakan pendapat, bicara langsung ke pokok, jujur dan terus terang, objektif, kritis, dan punya standar tinggi.","Dominan, berkemauan kuat, perfeksionis, dan suka bersaing.","Tangguh, disiplin, dan sangat menghargai komitmen.","Cenderung menutupi perasaan dan menyembunyikan kelemahan.","Berwibawa, pandai berkomunikasi, dan mampu menggerakkan orang.","Berbakat menjadi pemimpin."],s:["Belajarlah santai. Tidak perlu selalu sempurna dan bersaing dengan semua orang.","Ungkapkan perasaan Anda. Menyatakan perasaan bukan tanda kelemahan.","Belajarlah mengelola emosi. Jangan mudah marah.","Belajarlah menghargai orang lain.","Jangan terlalu sombong dan meremehkan orang lain. Lihat sisi baiknya. Jangan hanya melihat benar dan salah."]}
+};
+const P={"ISTJ": "Bidang Manajemen, Polisi, Intelijen, Hakim, Pengacara, Dokter, Akuntan (Staf Keuangan), Programmer atau yang berhubungan dengan IT, Analis Sistem, Pemimpin Militer.", "ISFJ": "Arsitek, Desainer Interior, Perawat, Administratif, Desainer, Pengasuh Anak, Konselor, Manajer Administrasi (Back Office), Penjaga Toko / Perpustakaan, Dunia Perhotelan.", "ISTP": "Polisi, Ahli Forensik, Programmer, Ahli Komputer, Analis Sistem, Teknisi, Insinyur, Mekanik, Pilot, Atlet, Pengusaha.", "ISFP": "Seniman, Desainer, Pekerja Sosial, Konselor, Psikolog, Guru, Aktor, Bidang Perhotelan.", "INFJ": "Pengajar, Psikolog, Dokter, Konselor, Pekerja Sosial, Fotografer, Seniman, Desainer, Pengasuh Anak.", "INTJ": "Peneliti, Ilmuwan, Insinyur, Teknisi, Pengajar, Profesor, Dokter, Penelitian dan Pengembangan, Analis Bisnis, Analis Sistem, Pengacara, Hakim, Programmer, Posisi Strategis dalam organisasi.", "INFP": "Penulis, Sastrawan, Konselor, Psikolog, Pengajar, Seniman, Rohaniawan, Bidang Perhotelan.", "INTP": "Ilmuwan, Fotografer, Programmer, Ahli komputer, Analis Sistem, Penulis Buku Teknis, Ahli Forensik, Jaksa, Pengacara, Teknisi.", "ESTP": "Pemasaran, Penjualan, Polisi, Pengusaha, Pialang Saham, Dukungan Teknis.", "ESFP": "Penghibur, Seniman, Pemasaran, Konselor, Desainer, Pemandu Wisata, Bidang Anak, Bidang Perhotelan.", "ENFP": "Konselor, Psikolog, Penghibur, Pengajar, Motivator, Presenter, Wartawan, Pembawa Acara, Seniman, Perhotelan.", "ENTP": "Pengacara, Psikolog, Konsultan, Ilmuwan, Aktor, Pemasaran, Programmer, Fotografer.", "ESTJ": "Militer, Manajer, Polisi, Hakim, Pengacara, Guru, Penjualan, Auditor, Akuntan, Analis Sistem.", "ESFJ": "Perencana Keuangan, Perawat, Guru, Bidang Anak, Konselor, Administratif, Perhotelan.", "ENFJ": "Konsultan, Psikolog, Konselor, Pengajar, Pemasaran, Bagian SDM, Koordinator Acara, Penghibur, Penulis, Motivator.", "ENTJ": "Manajer, Pemimpin Perusahaan, Kepala Sekolah, Pemimpin Yayasan."};
+
+// Pemetaan nomor soal ke dimensi (sesuai file Excel): A=huruf kiri, B=huruf kanan
+const DIM=[["E","I","Ekstrovert","Introvert",10],["S","N","Sensing","Intuition",20],["T","F","Thinking","Feeling",20],["J","P","Judging","Perceiving",20]];
+const dimOf=i=>{const m=i%7;return m===0?0:m<3?1:m<5?2:3}; // i = 0..69
+const BL=["Januari","Februari","Maret","April","Mei","Juni","Juli","Agustus","September","Oktober","November","Desember"];
+const $=id=>document.getElementById(id);
+const ans=Array(70).fill(null);
+let hasil=null,idn=null,layar=1;
+const SK="mbti_progress_v1",FIELDS=["nama","jk","umur","pend","kerja","alamat","tgl"];
+const pad=n=>String(n).padStart(2,"0");
+const hariIni=()=>{const t=new Date();return t.getFullYear()+"-"+pad(t.getMonth()+1)+"-"+pad(t.getDate())};
+$("tgl").value=hariIni();
+const fmtTgl=s=>{const[a,b,c]=s.split("-");return +c+" "+BL[b-1]+" "+a};
+// Simpan otomatis di perangkat ini, supaya jawaban tidak hilang jika halaman tertutup
+function simpan(){try{localStorage.setItem(SK,JSON.stringify({f:Object.fromEntries(FIELDS.map(k=>[k,$(k).value])),a:ans,s:layar}))}catch(e){}}
+const show=n=>{layar=n;["s1","s2","s3"].forEach((x,i)=>$(x).classList.toggle("hide",i!==n-1));window.scrollTo(0,0);simpan()};
+const goTo=el=>{const pt=parseFloat(getComputedStyle(document.documentElement).paddingTop)||0;window.scrollTo({top:Math.max(0,el.getBoundingClientRect().top+window.scrollY-pt-80),behavior:"smooth"})};
+$("s1").addEventListener("input",simpan);
+
+$("qs").innerHTML=Q.map((q,i)=>`<div class="q" id="q${i}"><p>${i+1}. ${q[0]}</p>`+
+ ["a","b"].map((k,j)=>`<label class="o" id="o${i}${k}"><input type="radio" name="r${i}" value="${k}"><span><b>${k.toUpperCase()}.</b> ${q[j+1]}</span></label>`).join("")+`</div>`).join("");
+function upd(){const n=ans.filter(Boolean).length;$("pgi").style.width=n/70*100+"%";$("pgt").textContent=n+" dari 70 terjawab"}
+$("qs").addEventListener("change",e=>{
+ const i=+e.target.name.slice(1);ans[i]=e.target.value;
+ ["a","b"].forEach(k=>$("o"+i+k).classList.toggle("on",k===e.target.value));
+ $("q"+i).classList.remove("miss");upd();simpan();
+});
+
+function buatIdn(){
+ const v=k=>$(k).value.trim();
+ if(!v("nama")||!v("jk")||!v("umur")||!v("pend")||!v("kerja")||!v("alamat")||!v("tgl")){$("e1").textContent="Mohon lengkapi semua data identitas.";return false}
+ const u=+v("umur");if(!(u>=5&&u<=100)){$("e1").textContent="Umur harus antara 5 sampai 100 tahun.";return false}
+ idn={Nama:v("nama"),"Jenis kelamin":v("jk"),Umur:u+" tahun",Pendidikan:v("pend"),Pekerjaan:v("kerja"),Alamat:v("alamat"),"Tanggal tes":fmtTgl(v("tgl"))};
+ $("e1").textContent="";return true;
+}
+$("mulai").onclick=()=>{if(buatIdn())show(2)};
+
+function hitung(){
+ // Jawaban A mengarah ke huruf kiri, B ke huruf kanan. Seri jatuh ke I, N, F, P (sama seperti file Excel).
+ const c=DIM.map(()=>[0,0]);
+ ans.forEach((a,i)=>c[dimOf(i)][a==="a"?0:1]++);
+ const dims=DIM.map((d,j)=>{const[x,y]=c[j];const win=x>y?0:1;return{d,x,y,px:Math.round(x/d[4]*100),py:Math.round(y/d[4]*100),win,huruf:d[win]}});
+ hasil={dims,tipe:dims.map(z=>z.huruf).join("")};render();
+}
+$("selesai").onclick=()=>{
+ const miss=ans.map((a,i)=>a?-1:i).filter(i=>i>=0);
+ if(miss.length){$("e2").textContent="Masih ada "+miss.length+" nomor yang belum dijawab (ditandai merah).";
+  miss.forEach(i=>$("q"+i).classList.add("miss"));goTo($("q"+miss[0]));return}
+ $("e2").textContent="";hitung();show(3);
+};
+
+const li=a=>a.map(t=>`<li>${t}</li>`).join("");
+function render(){
+ const{dims,tipe}=hasil;
+ $("res").innerHTML=`<h2 style="margin-top:0;text-align:center">Tipe Kepribadian Anda</h2><div class="tp">${tipe}</div>`+
+ dims.map(z=>`<div class="dm"><div class="l"><span>${z.d[2]} (${z.d[0]}): ${z.x} jawaban, ${z.px}%</span><span>${z.d[3]} (${z.d[1]}): ${z.y} jawaban, ${z.py}%</span></div><div class="b"><i style="width:${z.px}%;background:${z.win===0?"var(--acc)":"var(--bd)"}"></i><i style="width:${z.py}%;background:${z.win===1?"var(--acc)":"var(--bd)"}"></i></div></div>`).join("")+
+ `<h2>Deskripsi Kepribadian</h2><ol>${li(T[tipe].d)}</ol><h2>Saran dan Pengembangan</h2><ol>${li(T[tipe].s)}</ol><h2>Saran Profesi</h2><p>${P[tipe]}</p>`;
+}
+
+// Ulangi tes: kosongkan jawaban DAN identitas
+$("ulang").onclick=()=>{
+ ans.fill(null);hasil=null;idn=null;
+ document.querySelectorAll("#qs input").forEach(r=>r.checked=false);
+ document.querySelectorAll(".o").forEach(o=>o.classList.remove("on"));
+ document.querySelectorAll(".q").forEach(o=>o.classList.remove("miss"));
+ FIELDS.forEach(k=>$(k).value="");$("tgl").value=hariIni();
+ $("e1").textContent="";$("e2").textContent="";$("e3").textContent="";upd();
+ try{localStorage.removeItem(SK)}catch(e){}
+ show(1);
+};
+
+// PDF satu halaman (A4); ukuran huruf diperkecil otomatis bila isi terlalu panjang
+function gambarPDF(fs){
+ const{jsPDF}=window.jspdf;const doc=new jsPDF({unit:"pt",format:"a4"});
+ const M=40,W=515,blue=[31,78,156],lh=fs*1.3;
+ const wrap=(txt,x,y,w)=>{doc.splitTextToSize(txt,w).forEach(l=>{doc.text(l,x,y);y+=lh});return y};
+ const head=(t,y)=>{doc.setFont("helvetica","bold");doc.setFontSize(fs+1.5);doc.setTextColor(...blue);doc.text(t,M,y);doc.setDrawColor(...blue);doc.setLineWidth(.5);doc.line(M,y+3,M+W,y+3);doc.setTextColor(30);return y+fs+9};
+ const nums=(arr,y)=>{doc.setFont("helvetica","normal");doc.setFontSize(fs);arr.forEach((t,i)=>{doc.text((i+1)+".",M+3,y);y=wrap(t,M+18,y,W-18)+2});return y};
+ const{dims,tipe}=hasil;
+
+ doc.setFont("helvetica","bold");doc.setFontSize(16);doc.setTextColor(...blue);doc.text("HASIL TES KEPRIBADIAN MBTI",297.5,44,{align:"center"});
+ doc.setFontSize(8.5);doc.setFont("helvetica","normal");doc.setTextColor(120);doc.text("Rahasia",M+W,44,{align:"right"});doc.setTextColor(30);
+ doc.setDrawColor(...blue);doc.setLineWidth(1.5);doc.line(M,52,M+W,52);
+
+ // Identitas 2 kolom
+ let y=70;doc.setFontSize(fs);
+ const cell=(k,v,x,lw,w,y0)=>{doc.setFont("helvetica","bold");doc.text(k,x,y0);doc.setFont("helvetica","normal");doc.text(":",x+lw,y0);return wrap(v,x+lw+6,y0,w-lw-6)};
+ [["Nama","Jenis kelamin"],["Umur","Pendidikan"],["Pekerjaan","Tanggal tes"]].forEach(([a,b])=>{
+  const y1=cell(a,idn[a],M,62,W/2-8,y),y2=cell(b,idn[b],M+W/2+8,72,W/2-8,y);y=Math.max(y1,y2)+1});
+ y=cell("Alamat",idn.Alamat,M,62,W,y)+2;
+
+ y=head("A. HASIL SKORING TIPE KEPRIBADIAN",y+8);
+ doc.setFont("helvetica","bold");doc.setFontSize(24);doc.setTextColor(...blue);doc.text(tipe.split("").join(" "),297.5,y+8,{align:"center"});doc.setTextColor(30);y+=26;
+ dims.forEach(z=>{
+  doc.setFont("helvetica","normal");doc.setFontSize(fs-.5);
+  doc.text(z.d[2]+" ("+z.d[0]+"): "+z.x+" jawaban ("+z.px+"%)",M,y);
+  doc.text(z.d[3]+" ("+z.d[1]+"): "+z.y+" jawaban ("+z.py+"%)",M+W,y,{align:"right"});
+  const bw=W*z.px/100;
+  doc.setFillColor(...(z.win===0?blue:[205,212,226]));doc.rect(M,y+4,bw,8,"F");
+  doc.setFillColor(...(z.win===1?blue:[205,212,226]));doc.rect(M+bw,y+4,W-bw,8,"F");
+  y+=26});
+ y=head("B. DESKRIPSI KEPRIBADIAN",y);y=nums(T[tipe].d,y);
+ y=head("C. SARAN DAN PENGEMBANGAN",y+4);y=nums(T[tipe].s,y);
+ y=head("D. SARAN PROFESI",y+4);
+ doc.setFont("helvetica","normal");doc.setFontSize(fs);y=wrap(P[tipe],M,y,W);
+ doc.setFont("helvetica","italic");doc.setFontSize(fs-1.5);doc.setTextColor(110);
+ y=wrap("Catatan: hasil ini adalah gambaran kecenderungan kepribadian, bukan penilaian benar atau salah, dan bukan satu-satunya dasar untuk mengambil keputusan.",M,y+6,W-190);
+ doc.setTextColor(30);doc.setFont("helvetica","bold");doc.setFontSize(10.5);
+ const rx=M+W-160;doc.text("TTD Pemeriksa",rx+80,762,{align:"center"});
+ doc.setFont("helvetica","normal");doc.setLineWidth(.5);doc.line(rx,810,rx+160,810);
+ return{doc,y};
+}
+function buatPDF(){
+ let r;for(const fs of [9.5,9,8.5,8,7.5]){r=gambarPDF(fs);if(r.y<=752)break}
+ return r.doc;
+}
+
+$("unduh").onclick=async()=>{
+ $("e3").textContent="";
+ try{
+  const doc=buatPDF();const buf=doc.output("arraybuffer");
+  const dl=window.claude?await claude.use("downloads"):null;
+  if(!dl){doc.save("Hasil_MBTI.pdf");return}
+  await dl.save({filename:"Hasil_MBTI_"+idn.Nama.replace(/[^\w]+/g,"_")+".pdf",data:buf});
+ }catch(e){if(!e||e.code!=="declined")$("e3").textContent="PDF belum bisa disimpan. Silakan coba lagi."}
+};
+
+// Pulihkan jawaban dan identitas yang tersimpan
+try{
+ const d=JSON.parse(localStorage.getItem(SK)||"null");
+ if(d){
+  FIELDS.forEach(k=>{if(d.f&&d.f[k])$(k).value=d.f[k]});
+  (d.a||[]).forEach((a,i)=>{if(a==="a"||a==="b"){ans[i]=a;$("o"+i+a).classList.add("on");document.querySelector(`input[name=r${i}][value=${a}]`).checked=true}});
+  upd();
+  if(d.s>=2&&buatIdn()){if(d.s===3&&ans.every(Boolean)){hitung();show(3)}else show(2)}
+  $("e1").textContent="";
+ }
+}catch(e){}
+</script>
+</body>
+</html>
